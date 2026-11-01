@@ -5,7 +5,8 @@
 | Project | **Sky & Sea 3D — Ambient Study & Focus Sanctuary** (`sky-and-sea-3d`) |
 | Started | 2026-11-01 07:28:10 UTC |
 | Packaged | 2026-11-01 08:00:45 UTC |
-| Duration | **32m 35s** (1,955 seconds) |
+| Initial build duration | **32m 35s** (1,955 seconds) |
+| Post-release fix | 2026-11-01 16:31:26 UTC · v1.0.1 automatic music start |
 | Harness | OpenCode 2.2.5 |
 | Model | DeepSeek V4.1 Flash (`opencode-go/deepseek-v4.1-flash`) |
 | Session | `ses_e69fdc73dffeZoGaFIXXZkL8tO` |
@@ -14,26 +15,26 @@
 
 ## Token usage
 
-| Metric | Tokens |
-| --- | ---: |
-| Input | 486,195 |
-| Output | 110,962 |
-| Reasoning | 66,976 |
-| **Total (input + output + reasoning)** | **664,133** |
-| Cache read | 19,606,400 |
-| Cache write | 1,142 |
-| Total including cache | 20,270,533 |
+| Metric | Initial build | Post-release fix | Cumulative |
+| --- | ---: | ---: | ---: |
+| Input | 486,195 | 347,589 | 833,784 |
+| Output | 110,962 | 20,503 | 131,465 |
+| Reasoning | 66,976 | 24,123 | 91,099 |
+| **Total (input + output + reasoning)** | **664,133** | **392,215** | **1,056,348** |
+| Cache read | 19,606,400 | 15,402,880 | 35,009,280 |
+| Cache write | 1,142 | 0 | 1,142 |
+| Total including cache | 20,270,533 | 15,795,095 | 36,065,628 |
 
-> Final snapshot taken from the OpenCode session record at 2026-11-01 08:00:43 UTC, after GitHub publication and live Pages verification, immediately before the final state commit. That final commit adds only a marginal number of tokens. Total cost reported by the session: **$0.00**.
+> The initial build snapshot was taken at 2026-11-01 08:00:43 UTC immediately before packaging. The cumulative snapshot was taken after the v1.0.1 automatic-music fix at 2026-11-01 16:31:26 UTC. Wall-clock elapsed time includes user idle time between requests, so the recorded build duration remains the active creation time of the original build. Total cost reported by the session: **$0.00**.
 
 ## What was built
 
 A complete, no-build interactive 3D ambient study sanctuary across three modular source files:
 
-- `index.html` — 28,930 bytes, 515 lines
+- `index.html` — 30,641 bytes, 533 lines
 - `style.css` — 60,029 bytes, 2,817 lines
-- `script.js` — 110,216 bytes, 2,909 lines
-- `README.md` — 11,670 bytes, 264 lines
+- `script.js` — 113,076 bytes, 2,984 lines
+- `README.md` — 12,579 bytes, 275 lines
 
 ### Scenery engine
 
@@ -86,15 +87,26 @@ A complete, no-build interactive 3D ambient study sanctuary across three modular
 - Verified the YouTube iframe loads the long-form Lofi Girl mix.
 - Captured six clean screenshots: desktop Golden Sunset, moonlit SkyCraft, Misty Dawn, mobile SkyCraft, mobile focus panel and hide-UI mode.
 - Published to GitHub, enabled Pages, and re-ran the live site at <https://somphol.github.io/sky-and-sea-3d/?selftest=1>: **16/16** tests pass with **0** runtime errors.
+- v1.0.1: verified with a real CDP mouse click that opening **Music streams** auto-loads and auto-starts the Lofi Girl mix without a second selection. Also verified Stop → reopen stays stopped, and **Play stream** recovers playback.
+
+## Post-release fix — v1.0.1
+
+**Music now starts automatically when the Music streams drawer opens.**
+
+- The drawer auto-loads the last selected stream, or the first curated mix on a fresh visit, from the same click that opens it.
+- The embed now requests `enablejsapi=1` and receives repeated `playVideo` commands after its iframe loads.
+- A direct-click **Play stream** button re-issues the embed if a strict browser policy or extension still blocks autoplay.
+- Autoplay preference persists. Stopping the player stays stopped across reloads; selecting a stream or pressing Play stream restores it.
+- Music continues when the drawer closes, with Stop player available from the drawer.
 
 ## Files
 
 | File | Size |
 | --- | ---: |
-| `index.html` | 28,930 bytes |
+| `index.html` | 30,641 bytes |
 | `style.css` | 60,029 bytes |
-| `script.js` | 110,216 bytes |
-| `README.md` | 11,670 bytes |
+| `script.js` | 113,076 bytes |
+| `README.md` | 12,579 bytes |
 | `favicon.svg` | 1,088 bytes |
 | `screenshot.png` | 1,120,239 bytes |
 | `screenshot-sky.png` | 1,227,914 bytes |
@@ -102,6 +114,7 @@ A complete, no-build interactive 3D ambient study sanctuary across three modular
 | `screenshot-mobile.png` | 1,088,575 bytes |
 | `screenshot-mobile-focus.png` | 539,690 bytes |
 | `screenshot-hidden.png` | 1,065,514 bytes |
+| `docs/social-card.png` | 459,604 bytes |
 | `state.json` | build record |
 | `LICENSE` | MIT |
 | `THIRD_PARTY_NOTICES.md` | runtime credits |

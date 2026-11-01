@@ -7,7 +7,7 @@
   "use strict";
 
   const APP_ID = "sky-and-sea-3d";
-  const APP_VERSION = "1.0.0";
+  const APP_VERSION = "1.0.1";
   const STORAGE_KEY = "sky_and_sea_sanctuary_v1";
   const FOCUS_SECONDS = 25 * 60;
   const BREAK_SECONDS = 5 * 60;
@@ -277,7 +277,8 @@
         lastTickAt: null
       },
       youtube: {
-        lastStream: null
+        lastStream: null,
+        autoplay: true
       },
       savedAt: null
     };
@@ -327,9 +328,12 @@
       base.timer.endAt = null;
     }
 
-    if (raw.youtube && typeof raw.youtube === "object" && typeof raw.youtube.lastStream === "string") {
-      const id = extractYouTubeId(raw.youtube.lastStream);
-      if (id) base.youtube.lastStream = id;
+    if (raw.youtube && typeof raw.youtube === "object") {
+      if (typeof raw.youtube.lastStream === "string") {
+        const id = extractYouTubeId(raw.youtube.lastStream);
+        if (id) base.youtube.lastStream = id;
+      }
+      base.youtube.autoplay = raw.youtube.autoplay !== false;
     }
 
     base.savedAt = typeof raw.savedAt === "string" ? raw.savedAt : null;
@@ -1804,6 +1808,8 @@
       this.idleTimer = null;
       this.modalHistory = [];
       this.currentStream = null;
+      this.musicStopped = false;
+      this.youtubeTimers = [];
       this.pendingCompletion = null;
       this.loaderHidden = false;
       this.storageFailed = false;
@@ -1905,6 +1911,7 @@
         playerPlaceholder: $("#playerPlaceholder"),
         nowPlaying: $("#nowPlaying"),
         openYouTube: $("#openYouTube"),
+        playMusic: $("#playMusicBtn"),
         stopMusic: $("#stopMusicBtn"),
         streamCards: $$(".stream-card"),
         streamGrid: $("#streamGrid"),
@@ -1973,7 +1980,7 @@
       this.dom.guideBtn.addEventListener("click", () => this.openModal("guide"));
       this.dom.musicBtn.addEventListener("click", () => this.openModal("music"));
       this.dom.player.addEventListener("load", () => {
-        // The iframe can remain blank when a stream is blocked; the surrounding UI stays usable.
+        if (this.currentStream) this.tryStartYouTube();
       });
 
       $$("[data-close-modal]").forEach((button) => {
@@ -1986,6 +1993,15 @@
         });
       });
 
+      this.dom.playMusic.addEventListener("click", () => {
+        if (!this.currentStream) {
+          this.autoLoadMusicStream(true);
+          return;
+        }
+        // Re-issuing the embed from a direct click gives browsers the user
+        // activation they need to start audible playback.
+        this.loadStream(this.currentStream.id, this.currentStream.title, this.activeStreamCard());
+      });
       this.dom.stopMusic.addEventListener("click", () => this.stopStream());
       this.dom.customForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -2621,6 +2637,11 @@
           const card = this.dom.streamCards.find((item) => item.dataset.video === last);
           if (card) card.classList.add("is-active");
         }
+        if (!this.currentStream && this.state.youtube.autoplay !== false) {
+          // Opening the drawer is a user gesture, so begin the last/first
+          // curated stream immediately instead of waiting for a second click.
+          this.autoLoadMusicStream();
+        }
       }
       document.body.classList.add("modal-open");
     }
@@ -2639,18 +2660,67 @@
       }
     }
 
+    activeStreamCard(videoId = this.currentStream && this.currentStream.id) {
+      return this.dom.streamCards.find((item) => item.dataset.video === videoId) || null;
+    }
+
+    autoLoadMusicStream(force = false) {
+      if (this.currentStream && !force) return;
+      if (this.musicStopped && !force) return;
+      const last = this.state.youtube && this.state.youtube.lastStream;
+      const card = this.activeStreamCard(last) || this.dom.streamCards[0];
+      if (!card) return;
+      this.loadStream(card.dataset.video, card.dataset.streamTitle, card);
+    }
+
+    clearYouTubeTimers() {
+      this.youtubeTimers.forEach((timer) => window.clearTimeout(timer));
+      this.youtubeTimers = [];
+    }
+
+    sendYouTubeCommand(func, args = []) {
+      if (!this.currentStream || this.dom.player.hidden || !this.dom.player.contentWindow) return;
+      try {
+        this.dom.player.contentWindow.postMessage(JSON.stringify({
+          event: "command",
+          func,
+          args
+        }), "*");
+      } catch {
+        // Cross-origin messaging can be unavailable in hardened browsers.
+      }
+    }
+
+    tryStartYouTube() {
+      this.clearYouTubeTimers();
+      this.sendYouTubeCommand("unMute");
+      this.sendYouTubeCommand("playVideo");
+      this.youtubeTimers = [
+        window.setTimeout(() => this.sendYouTubeCommand("playVideo"), 350),
+        window.setTimeout(() => this.sendYouTubeCommand("playVideo"), 1100),
+        window.setTimeout(() => this.sendYouTubeCommand("playVideo"), 2200)
+      ];
+    }
+
     loadStream(videoId, title, card) {
       if (!videoId || !/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
         this.toast("That video could not be loaded.");
         return;
       }
       this.currentStream = { id: videoId, title: title || "YouTube stream" };
+      this.musicStopped = false;
       const params = new URLSearchParams({
         autoplay: "1",
         rel: "0",
         modestbranding: "1",
-        playsinline: "1"
+        playsinline: "1",
+        enablejsapi: "1",
+        iv_load_policy: "3"
       });
+      if (window.location.origin && window.location.origin !== "null") {
+        params.set("origin", window.location.origin);
+      }
+      this.clearYouTubeTimers();
       this.dom.player.src = `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
       this.dom.player.hidden = false;
       this.dom.playerPlaceholder.hidden = true;
@@ -2658,21 +2728,26 @@
       this.dom.openYouTube.href = `https://www.youtube.com/watch?v=${videoId}`;
       this.dom.streamCards.forEach((item) => item.classList.toggle("is-active", item === card || (!card && item.dataset.video === videoId)));
       this.state.youtube.lastStream = videoId;
+      this.state.youtube.autoplay = true;
       this.persist(true);
       if (this.dom.musicOverlay.hidden) this.openModal("music");
+      this.tryStartYouTube();
     }
 
     stopStream() {
+      this.clearYouTubeTimers();
       this.currentStream = null;
-      this.dom.player.src = "";
+      this.musicStopped = true;
+      this.dom.player.src = "about:blank";
       this.dom.player.hidden = true;
       this.dom.playerPlaceholder.hidden = false;
       this.dom.nowPlaying.textContent = "Nothing selected";
       this.dom.openYouTube.href = "https://www.youtube.com/";
       this.dom.streamCards.forEach((item) => item.classList.remove("is-active"));
       this.state.youtube.lastStream = null;
+      this.state.youtube.autoplay = false;
       this.persist(true);
-      this.toast("YouTube player stopped.");
+      this.toast("YouTube player stopped. Press Play stream to bring it back.");
     }
 
     closeMobilePanels() {

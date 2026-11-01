@@ -2,7 +2,7 @@
   "project": {
     "name": "Sky & Sea 3D — Ambient Study & Focus Sanctuary",
     "slug": "sky-and-sea-3d",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "A procedural 3D ambient study sanctuary with cinematic oceans and cloud islands, synthesized Web Audio soundscapes, long-form YouTube music, a Pomodoro ritual, and a portable local study log.",
     "repository": "https://github.com/somphol/sky-and-sea-3d",
     "liveDemo": "https://somphol.github.io/sky-and-sea-3d/",
@@ -21,25 +21,31 @@
     "durationHuman": "32m 35s"
   },
   "usage": {
-    "snapshotAt": "2026-11-01T08:00:43.000Z",
-    "tokensInput": 486195,
-    "tokensOutput": 110962,
-    "tokensReasoning": 66976,
-    "tokensTotal": 664133,
-    "tokensCacheRead": 19606400,
+    "snapshotAt": "2026-11-01T16:31:26.000Z",
+    "tokensInput": 833784,
+    "tokensOutput": 131465,
+    "tokensReasoning": 91099,
+    "tokensTotal": 1056348,
+    "tokensCacheRead": 35009280,
     "tokensCacheWrite": 1142,
-    "tokensTotalIncludingCache": 20270533,
+    "tokensTotalIncludingCache": 36065628,
     "costUsd": 0.0,
-    "note": "Final snapshot taken from the OpenCode session record after GitHub publication and live Pages verification, immediately before the final state commit. That final commit adds only a marginal number of tokens."
+    "initialBuildTokens": 664133,
+    "postReleaseFixTokens": 392215,
+    "note": "Cumulative session usage after the post-release automatic-music fix. The initial build snapshot was 664,133 tokens; the fix added 392,215 tokens. Wall-clock elapsed time also includes user idle time between requests, so the recorded build duration remains the active creation time for the original build."
   },
   "build": {
     "files": {
-      "index.html": { "bytes": 28930, "lines": 515 },
+      "index.html": { "bytes": 30641, "lines": 533 },
       "style.css": { "bytes": 60029, "lines": 2817 },
-      "script.js": { "bytes": 110216, "lines": 2909 },
-      "README.md": { "bytes": 11670, "lines": 264 },
-      "sourceTotalBytes": 210845,
-      "sourceTotalLines": 6505
+      "script.js": { "bytes": 113076, "lines": 2984 },
+      "README.md": { "bytes": 12579, "lines": 275 },
+      "sourceTotalBytes": 216325,
+      "sourceTotalLines": 6609
+    },
+    "socialCard": {
+      "path": "docs/social-card.png",
+      "bytes": 459604
     },
     "screenshots": {
       "screenshot.png": 1120239,
@@ -86,6 +92,20 @@
       "No uncaught exceptions or application console errors"
     ]
   },
+  "maintenance": [
+    {
+      "version": "1.0.1",
+      "fixedAt": "2026-11-01T16:31:26.000Z",
+      "summary": "Music now starts automatically when the Music streams drawer opens.",
+      "changes": [
+        "Auto-loads the last selected stream, or the first curated mix on a fresh visit, from the same click that opens the drawer",
+        "Adds YouTube enablejsapi and repeated playVideo postMessage attempts on iframe load",
+        "Adds a direct-click Play stream recovery button and persists an autoplay preference",
+        "Keeps the stream playing when the drawer closes and preserves the stopped state across reloads"
+      ],
+      "verification": "16/16 self-tests, 0 runtime errors, real-click autoplay test confirmed the Lofi Girl mix starts without a second selection."
+    }
+  ],
   "credits": {
     "builtWith": "OpenCode 2.2.5 + DeepSeek V4.1 Flash (opencode-go/deepseek-v4.1-flash)",
     "opencodeUrl": "https://opencode.ai",

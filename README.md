@@ -234,9 +234,10 @@ sky-and-sea-3d/
 ├── screenshot.png              # Desktop · Golden Sunset
 ├── screenshot-sky.png          # Desktop · SkyCraft moonlit
 ├── screenshot-dawn.png         # Desktop · Misty Dawn
-├── screenshot-mobile.png       # Mobile · ambient view
+├── screenshot-mobile.png       # Mobile · SkyCraft ambient view
 ├── screenshot-mobile-focus.png # Mobile · focus bottom sheet
 ├── screenshot-hidden.png       # Hide UI mode
+├── docs/social-card.png        # README and social-preview card
 ├── README.md
 ├── LICENSE
 ├── THIRD_PARTY_NOTICES.md
