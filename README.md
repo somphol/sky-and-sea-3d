@@ -1,12 +1,19 @@
+<div align="center">
+
+<img src="docs/social-card.png" alt="Sky & Sea 3D — Ambient Study & Focus Sanctuary" width="100%" />
+
 # Sky & Sea 3D
 
-### Ambient Study & Focus Sanctuary
+**Ambient Study & Focus Sanctuary**
 
-A single-page, no-build 3D study sanctuary that combines a procedural ocean and cloud world, a generated Web Audio soundscape, a Pomodoro ritual, long-form YouTube music, and a portable study log.
+A procedural ocean and cloud world, a generated Web Audio soundscape, a Pomodoro ritual, and a portable study log.
 
-[**Live demo**](https://somphol.github.io/sky-and-sea-3d/) · [Features](#features) · [Run locally](#run-locally) · [Controls](#controls) · [Verification](#verification) · [Credits](#credits)
+[![Live demo](https://img.shields.io/badge/live_demo-online-38bdf8?style=flat-square)](https://somphol.github.io/sky-and-sea-3d/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-38bdf8?style=flat-square)](LICENSE)
 
-![Sky & Sea 3D — Golden Sunset over Ocean Drift](screenshot.png)
+**[Try it live →](https://somphol.github.io/sky-and-sea-3d/)**
+
+</div>
 
 ---
 
@@ -82,6 +89,8 @@ The music drawer embeds available YouTube streams in a privacy-enhanced `youtube
 - Chillhop Music — live jazzy and lofi beats
 - Lofi Girl — synthwave radio (live)
 - Quiet Quest — 4 hours of ambient study music
+
+**Music starts automatically when the drawer opens.** The last selected stream (or the first curated mix on a fresh visit) is loaded inside the user's click, and the player is commanded to play once its iframe is ready. A **Play stream** button re-issues the embed inside a direct click if a browser or extension still blocks autoplay. The previous stream also keeps playing while the drawer is closed.
 
 There is also a paste-a-link field for any YouTube video, Short, live URL or 11-character video ID. Video availability and regional restrictions are controlled by YouTube.
 
@@ -160,7 +169,7 @@ https://somphol.github.io/sky-and-sea-3d/?scene=ocean&preset=dawn
 ```json
 {
   "app": "sky-and-sea-3d",
-  "appVersion": "1.0.0",
+  "appVersion": "1.0.1",
   "exportedAt": "2026-11-01T08:00:00.000Z",
   "stats": {
     "totalFocusSeconds": 7500,
@@ -210,7 +219,7 @@ The build was exercised in headless Chrome (WebGL via the headless renderer) and
 - Verified `focus_sanctuary_log.json` download and a real synthetic File import with sanitised stats and preferences.
 - Verified keyboard shortcuts `H`, `2`, `O` and `Space`.
 - Verified mobile layout at 390 × 844 with no horizontal overflow, four dock buttons, bottom-sheet panels and the touch-friendly restore chip.
-- Verified the YouTube embed loads a long-form Lofi Girl mix in the player.
+- Verified the YouTube drawer auto-loads and auto-starts the long-form Lofi Girl mix from a real click, with **Play stream** as a click-based recovery path when a browser blocks audible autoplay.
 
 The built-in test surface covers state defaults, preset/scene counts, four audio channels, timer formatting, binaural configuration, YouTube ID parsing, export serialisation, localStorage availability, core DOM nodes, the Three.js renderer and auto-pilot camera state.
 
@@ -241,6 +250,7 @@ sky-and-sea-3d/
 - Current Chrome, Edge, Firefox and Safari with WebGL enabled.
 - Web Audio requires a user gesture before sound can start; this is normal browser policy.
 - YouTube embeds may be unavailable in some regions, networks or privacy configurations.
+- Browsers may block audible autoplay before the page receives a click. The music drawer starts from the click that opens it, and **Play stream** provides a direct-click retry if a stricter policy or extension blocks playback.
 - If WebGL is unavailable, the application shows a fallback and the timer, sound mixer and study log remain functional.
 
 ## Privacy
