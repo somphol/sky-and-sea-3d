@@ -36,11 +36,11 @@
   },
   "build": {
     "files": {
-      "index.html": { "bytes": 30641, "lines": 533 },
+      "index.html": { "bytes": 30665, "lines": 533 },
       "style.css": { "bytes": 60029, "lines": 2817 },
       "script.js": { "bytes": 113076, "lines": 2984 },
       "README.md": { "bytes": 12579, "lines": 275 },
-      "sourceTotalBytes": 216325,
+      "sourceTotalBytes": 216349,
       "sourceTotalLines": 6609
     },
     "socialCard": {

@@ -31,7 +31,7 @@
 
 A complete, no-build interactive 3D ambient study sanctuary across three modular source files:
 
-- `index.html` — 30,641 bytes, 533 lines
+- `index.html` — 30,665 bytes, 533 lines
 - `style.css` — 60,029 bytes, 2,817 lines
 - `script.js` — 113,076 bytes, 2,984 lines
 - `README.md` — 12,579 bytes, 275 lines
@@ -98,12 +98,13 @@ A complete, no-build interactive 3D ambient study sanctuary across three modular
 - A direct-click **Play stream** button re-issues the embed if a strict browser policy or extension still blocks autoplay.
 - Autoplay preference persists. Stopping the player stays stopped across reloads; selecting a stream or pressing Play stream restores it.
 - Music continues when the drawer closes, with Stop player available from the drawer.
+- CSS, JavaScript and favicon URLs are versioned as `?v=1.0.1` so GitHub Pages and browser caches deliver the patched player immediately.
 
 ## Files
 
 | File | Size |
 | --- | ---: |
-| `index.html` | 30,641 bytes |
+| `index.html` | 30,665 bytes |
 | `style.css` | 60,029 bytes |
 | `script.js` | 113,076 bytes |
 | `README.md` | 12,579 bytes |
