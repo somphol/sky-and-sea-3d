@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1a25">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Sky & Sea 3D is an ambient study sanctuary: procedural ocean and cloud scenery, a Pomodoro timer, synthesised nature soundscapes and a distraction-free focus space.">
+  <title>Sky &amp; Sea 3D — Ambient Study &amp; Focus Sanctuary</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-scene="ocean" data-preset="sunset">
+  <div id="webgl" aria-hidden="true"></div>
+
+  <div class="screen-grade" aria-hidden="true">
+    <div class="grade-vignette"></div>
+    <div class="grade-grain"></div>
+    <div class="grade-scan"></div>
+  </div>
+
+  <div class="frame-corners" aria-hidden="true">
+    <span class="corner corner-tl"></span>
+    <span class="corner corner-tr"></span>
+    <span class="corner corner-bl"></span>
+    <span class="corner corner-br"></span>
+  </div>
+
+  <header class="topbar" id="topbar">
+    <a class="brand" href="#" id="brandHome" aria-label="Sky and Sea 3D home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 44 44" fill="none">
+          <circle cx="22" cy="22" r="20.5" stroke="currentColor" stroke-opacity=".35"/>
+          <path d="M8 27.4c3.3-4.1 6.3-4.1 9.6 0 3.3 4.1 6.3 4.1 9.6 0 3.3-4.1 6.3-4.1 9.6 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M12 20.5c2.4-3 4.7-3 7.1 0 2.4 3 4.7 3 7.1 0 2.4-3 4.7-3 7.1 0" stroke="currentColor" stroke-opacity=".55" stroke-width="1" stroke-linecap="round"/>
+          <circle cx="30" cy="13.5" r="2.6" fill="currentColor" fill-opacity=".9"/>
+        </svg>
+      </span>
+      <span class="brand-copy">
+        <span class="brand-title">Sky <em>&amp;</em> Sea</span>
+        <span class="brand-sub">Ambient Study &amp; Focus Sanctuary</span>
+      </span>
+    </a>
+
+    <div class="top-status" aria-live="polite">
+      <div class="status-chip">
+        <span class="status-dot"></span>
+        <span id="statusScene">Ocean Drift</span>
+      </div>
+      <span class="status-divider"></span>
+      <div class="status-chip status-chip-preset">
+        <span class="status-swatch" id="statusSwatch"></span>
+        <span id="statusPreset">Golden Sunset</span>
+      </div>
+      <span class="status-divider"></span>
+      <div class="status-chip status-chip-autopilot" title="The camera is on a slow cinematic auto-pilot">
+        <span class="autopilot-orbit" aria-hidden="true"></span>
+        Auto-pilot
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <div class="local-clock" aria-label="Local time">
+        <span id="worldClock">00:00</span>
+        <span class="local-clock-label">local</span>
+      </div>
+      <button class="icon-btn" id="guideBtn" type="button" aria-label="Open the field guide" title="Field guide">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.8 9.2a2.4 2.4 0 0 1 4.6 1c0 1.8-2.4 2.1-2.4 3.6"/><path d="M12 17.2h.01"/></svg>
+      </button>
+      <button class="icon-btn hide-btn" id="hideUiBtn" type="button" aria-label="Hide the interface" title="Hide interface (H)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12s3.4-6 9-6 9 6 9 6-3.4 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.5"/></svg>
+        <span>Hide UI</span>
+        <kbd>H</kbd>
+      </button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="panel panel-atmosphere" id="atmospherePanel" aria-label="Atmosphere controls">
+      <button class="panel-close" type="button" data-close-panel aria-label="Close atmosphere panel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+
+      <div class="panel-heading">
+        <span class="eyebrow">01 · Atmosphere</span>
+        <h1>Choose your<br><em>horizon.</em></h1>
+        <p>Two living worlds, four hours of light.</p>
+      </div>
+
+      <section class="control-section" aria-labelledby="sceneHeading">
+        <div class="section-label-row">
+          <h2 id="sceneHeading">Scenery</h2>
+          <span class="micro-status" id="sceneMicro">waves · 60 fps</span>
+        </div>
+        <div class="scene-switcher" role="group" aria-label="3D scenery mode">
+          <button class="scene-btn is-active" type="button" data-scene="ocean" aria-pressed="true">
+            <span class="scene-icon scene-icon-ocean" aria-hidden="true">
+              <svg viewBox="0 0 32 32"><path d="M3 20c3.2-4 6.2-4 9.4 0 3.2 4 6.2 4 9.4 0 3.2-4 6.2-4 9.4 0"/><path d="M3 25c3.2-4 6.2-4 9.4 0 3.2 4 6.2 4 9.4 0 3.2-4 6.2-4 9.4 0" opacity=".45"/><circle cx="23.5" cy="9" r="3" opacity=".8"/></svg>
+            </span>
+            <span class="scene-copy">
+              <strong>Ocean Drift</strong>
+              <small>Emerald swell · endless horizon</small>
+            </span>
+            <span class="scene-check" aria-hidden="true"></span>
+          </button>
+          <button class="scene-btn" type="button" data-scene="sky" aria-pressed="false">
+            <span class="scene-icon scene-icon-sky" aria-hidden="true">
+              <svg viewBox="0 0 32 32"><path d="M8 21h16a4 4 0 0 0 .4-8 6.6 6.6 0 0 0-12.6-2A4.8 4.8 0 0 0 8 21Z"/><path d="M11 25h10" opacity=".4"/></svg>
+            </span>
+            <span class="scene-copy">
+              <strong>SkyCraft Soar</strong>
+              <small>Cloud sea · floating sanctuaries</small>
+            </span>
+            <span class="scene-check" aria-hidden="true"></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="control-section" aria-labelledby="lightHeading">
+        <div class="section-label-row">
+          <h2 id="lightHeading">Light study</h2>
+          <span class="micro-status" id="lightMicro">18:42</span>
+        </div>
+        <div class="preset-list" role="group" aria-label="Atmosphere lighting preset">
+          <button class="preset-btn is-active" type="button" data-preset="sunset" aria-pressed="true">
+            <span class="preset-swatch swatch-sunset"><i></i></span>
+            <span class="preset-copy"><strong>Golden Sunset</strong><small>Warm amber · long shadows</small></span>
+            <span class="preset-radio" aria-hidden="true"></span>
+          </button>
+          <button class="preset-btn" type="button" data-preset="moonlit" aria-pressed="false">
+            <span class="preset-swatch swatch-moonlit"><i></i></span>
+            <span class="preset-copy"><strong>Moonlit Bioluminescent</strong><small>Midnight blue · living light</small></span>
+            <span class="preset-radio" aria-hidden="true"></span>
+          </button>
+          <button class="preset-btn" type="button" data-preset="dawn" aria-pressed="false">
+            <span class="preset-swatch swatch-dawn"><i></i></span>
+            <span class="preset-copy"><strong>Misty Morning Dawn</strong><small>Pearl mist · first light</small></span>
+            <span class="preset-radio" aria-hidden="true"></span>
+          </button>
+          <button class="preset-btn" type="button" data-preset="dusk" aria-pressed="false">
+            <span class="preset-swatch swatch-dusk"><i></i></span>
+            <span class="preset-copy"><strong>Deep Dusk</strong><small>Violet hush · last glow</small></span>
+            <span class="preset-radio" aria-hidden="true"></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="log-section" aria-labelledby="logHeading">
+        <div class="section-label-row">
+          <h2 id="logHeading">Sanctuary log</h2>
+          <span class="log-saved" id="saveState"><i></i> saved locally</span>
+        </div>
+        <div class="log-stats">
+          <div><span id="logTotal">0h 0m</span><small>focused</small></div>
+          <div><span id="logSessions">0</span><small>sessions</small></div>
+        </div>
+        <div class="log-actions">
+          <button class="ghost-btn" type="button" id="exportBtn" title="Download your study log as JSON">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 19h16"/></svg>
+            Save log
+          </button>
+          <button class="ghost-btn" type="button" id="importBtn" title="Restore a study log JSON file">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 19h16"/></svg>
+            Load log
+          </button>
+        </div>
+      </section>
+
+      <p class="panel-footnote"><span>◌</span> All skies, seas and sounds are generated live. No textures, samples or 3D models.</p>
+    </aside>
+
+    <aside class="panel panel-focus" id="focusPanel" aria-label="Pomodoro focus timer">
+      <button class="panel-close" type="button" data-close-panel aria-label="Close focus panel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+
+      <div class="focus-heading">
+        <div>
+          <span class="eyebrow">02 · Focus</span>
+          <h2>Pomodoro <em>ritual</em></h2>
+        </div>
+        <span class="gold-badge" id="focusBadge"><i></i> READY</span>
+      </div>
+
+      <div class="mode-tabs" role="tablist" aria-label="Timer mode">
+        <button class="mode-tab is-active" type="button" data-mode="focus" role="tab" aria-selected="true">Focus <span>25</span></button>
+        <button class="mode-tab" type="button" data-mode="break" role="tab" aria-selected="false">Break <span>05</span></button>
+      </div>
+
+      <div class="timer-wrap">
+        <svg class="timer-ring" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <linearGradient id="timerGradient" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#f0cf8a"/>
+              <stop offset="55%" stop-color="#d4a75a"/>
+              <stop offset="100%" stop-color="#8cc9bc"/>
+            </linearGradient>
+          </defs>
+          <circle class="timer-track" cx="100" cy="100" r="86"/>
+          <circle class="timer-progress" id="timerRing" cx="100" cy="100" r="86" stroke-dasharray="540.354" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-center">
+          <span class="timer-mode" id="timerModeLabel">FOCUS SESSION</span>
+          <strong class="timer-time" id="timerTime">25:00</strong>
+          <span class="timer-state" id="timerState"><i></i> ready when you are</span>
+        </div>
+      </div>
+
+      <div class="cycle-dots" id="sessionDots" aria-label="Four sessions in the current focus cycle">
+        <span></span><span></span><span></span><span></span>
+      </div>
+
+      <div class="timer-actions">
+        <button class="primary-btn" type="button" id="primaryTimerBtn">
+          <span class="primary-icon" aria-hidden="true">
+            <svg class="play-icon" viewBox="0 0 24 24"><path d="m9 6 9 6-9 6Z"/></svg>
+            <svg class="pause-icon" viewBox="0 0 24 24"><path d="M8 6v12M16 6v12"/></svg>
+          </span>
+          <span id="primaryTimerText">Begin focus</span>
+        </button>
+        <button class="round-btn" type="button" id="resetTimerBtn" aria-label="Reset timer" title="Reset timer">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v6h6"/><path d="M5.3 15a7 7 0 1 0 1-8.3L4 10"/></svg>
+        </button>
+        <button class="round-btn" type="button" id="skipTimerBtn" aria-label="Skip to next mode" title="Skip session">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 7 6-7 6Z"/><path d="M17 6v12"/></svg>
+        </button>
+      </div>
+
+      <div class="focus-stats">
+        <div class="focus-stat">
+          <span class="focus-stat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>
+          <span><small>Total focus</small><strong id="focusTotal">0h 0m</strong></span>
+        </div>
+        <div class="focus-stat">
+          <span class="focus-stat-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.4 5.3 5.6.7-4.2 3.9 1.1 5.6L12 15.7l-4.9 2.8L8.2 13 4 9l5.6-.7Z"/></svg></span>
+          <span><small>Completed</small><strong id="focusSessions">0</strong></span>
+        </div>
+      </div>
+
+      <div class="auto-break-row">
+        <span><i class="tiny-moon"></i> Auto-start 5 min break</span>
+        <label class="switch" aria-label="Automatically start breaks">
+          <input type="checkbox" id="autoBreakToggle" checked>
+          <span class="switch-track"></span>
+        </label>
+      </div>
+
+      <p class="focus-note" id="focusNote">Settle in. The horizon will keep moving for you.</p>
+    </aside>
+
+    <section class="panel audio-panel" id="audioPanel" aria-label="Ambient sound mixer">
+      <button class="panel-close" type="button" data-close-panel aria-label="Close sound panel">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="audio-heading">
+        <div class="audio-heading-copy">
+          <span class="eyebrow">03 · Ambience</span>
+          <h2>Sound <em>garden</em></h2>
+        </div>
+        <button class="audio-power" type="button" id="audioPower" aria-pressed="false" title="Start or pause the ambient mix">
+          <span class="power-wave" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span id="audioPowerText">Awaken</span>
+        </button>
+      </div>
+      <p class="audio-sub" id="audioStatus">Tap to let the soundscape bloom.</p>
+
+      <div class="mixer">
+        <div class="mix-row" data-channel="ocean">
+          <span class="mix-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14c2.2-2.8 4.2-2.8 6.4 0s4.2 2.8 6.4 0 4.2-2.8 6.4 0"/><path d="M3 18.5c2.2-2.8 4.2-2.8 6.4 0s4.2 2.8 6.4 0 4.2-2.8 6.4 0" opacity=".45"/></svg></span>
+          <label for="vol-ocean">Ocean surf</label>
+          <input class="mix-range" id="vol-ocean" type="range" min="0" max="100" value="52" aria-label="Ocean surf volume">
+          <output id="out-ocean">52</output>
+        </div>
+        <div class="mix-row" data-channel="rain">
+          <span class="mix-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 15h10a3.5 3.5 0 0 0 .3-7A5.5 5.5 0 0 0 6.8 9 3 3 0 0 0 7 15Z"/><path d="m8 18-1 2M12 18l-1 2M16 18l-1 2"/></svg></span>
+          <label for="vol-rain">Soft rain</label>
+          <input class="mix-range" id="vol-rain" type="range" min="0" max="100" value="20" aria-label="Soft rain volume">
+          <output id="out-rain">20</output>
+        </div>
+        <div class="mix-row" data-channel="chimes">
+          <span class="mix-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 17h6l-1-9H10Z"/><path d="M12 5v3M8 20c1.1 1 2.4 1.5 4 1.5s2.9-.5 4-1.5"/><path d="M6 8c1-1.6 2.2-2.8 3.8-3.7"/></svg></span>
+          <label for="vol-chimes">Wind chimes</label>
+          <input class="mix-range" id="vol-chimes" type="range" min="0" max="100" value="36" aria-label="Wind chimes volume">
+          <output id="out-chimes">36</output>
+        </div>
+        <div class="mix-row" data-channel="binaural">
+          <span class="mix-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="2.5"/><path d="M7.8 7.8a6 6 0 0 0 0 8.4M16.2 7.8a6 6 0 0 1 0 8.4" opacity=".7"/><path d="M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2" opacity=".4"/></svg></span>
+          <label for="vol-binaural">432 Hz focus</label>
+          <input class="mix-range" id="vol-binaural" type="range" min="0" max="100" value="14" aria-label="432 hertz focus tone volume">
+          <output id="out-binaural">14</output>
+        </div>
+      </div>
+
+      <div class="master-row">
+        <button class="mute-btn" type="button" id="muteBtn" aria-label="Mute ambient sound" title="Mute ambient sound (M)">
+          <svg class="vol-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v6h4l5 4V5L9 9Z"/><path d="M17 9.5a4 4 0 0 1 0 5M19.5 7a7.5 7.5 0 0 1 0 10" opacity=".65"/></svg>
+          <svg class="vol-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v6h4l5 4V5L9 9Z"/><path d="m17 9 5 5M22 9l-5 5"/></svg>
+        </button>
+        <label for="vol-master">Master</label>
+        <input class="mix-range" id="vol-master" type="range" min="0" max="100" value="72" aria-label="Master ambient volume">
+        <output id="out-master">72</output>
+      </div>
+      <p class="audio-note"><span class="live-dot"></span> Procedural Web Audio · 432 Hz tuning</p>
+    </section>
+
+    <div class="bottom-dock" id="bottomDock">
+      <button class="dock-btn dock-btn-music" type="button" id="musicBtn">
+        <span class="dock-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg></span>
+        <span><small>Long-form</small><strong>Music streams</strong></span>
+        <span class="dock-arrow">↗</span>
+      </button>
+      <span class="dock-rule"></span>
+      <button class="dock-btn" type="button" id="zenBtn" title="Hide interface (H)">
+        <span class="dock-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12s3.4-6 9-6 9 6 9 6-3.4 6-9 6-9-6-9-6Z"/><circle cx="12" cy="12" r="2.5"/></svg></span>
+        <span><small>Immersion</small><strong>Hide interface</strong></span>
+        <kbd>H</kbd>
+      </button>
+    </div>
+
+    <div class="scene-caption" id="sceneCaption" aria-live="polite">
+      <span class="caption-rule"></span>
+      <span class="caption-kicker" id="captionKicker">Ocean Drift · Golden Sunset</span>
+      <h2 id="captionTitle">Let the horizon<br><em>carry your thoughts.</em></h2>
+      <p id="captionText">A slow orbit over an emerald sea, tuned to the last warm hour of daylight.</p>
+    </div>
+
+    <div class="scene-meta" aria-hidden="true">
+      <div class="meta-item"><span>WIND</span><strong id="metaWind">6.2 kn</strong></div>
+      <div class="meta-item"><span>SWELL</span><strong id="metaSwell">0.8 m</strong></div>
+      <div class="meta-item"><span>LIGHT</span><strong id="metaLight">18:42</strong></div>
+      <div class="meta-bars"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="shortcut-hint" id="shortcutHint">
+      <span><kbd>H</kbd> hide UI</span>
+      <span><kbd>M</kbd> mute</span>
+      <span><kbd>Space</kbd> timer</span>
+      <span>drag to look</span>
+    </div>
+
+    <nav class="mobile-dock" aria-label="Mobile controls">
+      <button type="button" data-mobile-panel="atmosphere">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18M3 16h18"/><circle cx="9" cy="8" r="2"/><circle cx="15" cy="16" r="2"/></svg>
+        <span>Scenes</span>
+      </button>
+      <button type="button" data-mobile-panel="focus">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>
+        <span>Focus</span>
+      </button>
+      <button type="button" data-mobile-panel="audio">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v6h4l5 4V5L9 9Z"/><path d="M17 9.5a4 4 0 0 1 0 5"/></svg>
+        <span>Sound</span>
+      </button>
+      <button type="button" data-mobile-panel="music">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l10-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg>
+        <span>Music</span>
+      </button>
+    </nav>
+
+    <div class="zen-hint" id="zenHint" role="button" tabindex="0" aria-label="Restore the sanctuary interface">Press <kbd>H</kbd> to restore the interface</div>
+  </main>
+
+  <div class="modal-layer" id="musicOverlay" role="dialog" aria-modal="true" aria-labelledby="musicTitle" hidden>
+    <div class="modal-backdrop" data-close-modal="music"></div>
+    <section class="music-modal glass-panel">
+      <button class="modal-close" type="button" data-close-modal="music" aria-label="Close music streams">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="modal-heading">
+        <span class="eyebrow">Long-form listening · YouTube</span>
+        <h2 id="musicTitle">Music for the <em>long horizon.</em></h2>
+        <p>Curated live and long-form streams for deep work. Audio is served by YouTube in its own player.</p>
+      </div>
+
+      <div class="stream-grid" id="streamGrid">
+        <button class="stream-card is-active" type="button" data-video="CFGLoQIhmow" data-stream-title="Lofi Girl · beats to relax/study to (2h 50m)">
+          <span class="stream-art stream-art-lofi"><span class="stream-live">2H 50M</span><span class="stream-glyph">☾</span></span>
+          <span class="stream-info"><strong>Lofi Girl</strong><small>beats to relax / study to</small></span>
+          <span class="stream-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"/></svg></span>
+        </button>
+        <button class="stream-card" type="button" data-video="5yx6BWlEVcY" data-stream-title="Chillhop Music · jazzy &amp; chill beats (live)">
+          <span class="stream-art stream-art-chillhop"><span class="stream-live">LIVE</span><span class="stream-glyph">♫</span></span>
+          <span class="stream-info"><strong>Chillhop</strong><small>jazzy &amp; chill beats</small></span>
+          <span class="stream-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"/></svg></span>
+        </button>
+        <button class="stream-card" type="button" data-video="4xDzrJKXOOY" data-stream-title="Lofi Girl · synthwave radio (live)">
+          <span class="stream-art stream-art-synth"><span class="stream-live">24/7</span><span class="stream-glyph">◐</span></span>
+          <span class="stream-info"><strong>Synthwave Radio</strong><small>night-drive instrumental</small></span>
+          <span class="stream-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"/></svg></span>
+        </button>
+        <button class="stream-card" type="button" data-video="sjkrrmBnpGE" data-stream-title="Quiet Quest · 4 hours of ambient study music">
+          <span class="stream-art stream-art-sleep"><span class="stream-live">4 HOURS</span><span class="stream-glyph">✦</span></span>
+          <span class="stream-info"><strong>Deep Focus</strong><small>ambient study music</small></span>
+          <span class="stream-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 9 6-9 6Z"/></svg></span>
+        </button>
+      </div>
+
+      <div class="player-shell">
+        <div class="player-frame" id="playerFrame">
+          <div class="player-placeholder" id="playerPlaceholder">
+            <span class="player-orbit" aria-hidden="true"></span>
+            <span>Select a stream to begin</span>
+          </div>
+          <iframe id="youtubePlayer" title="YouTube music stream" src="" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen hidden></iframe>
+        </div>
+        <div class="player-meta">
+          <div>
+            <span class="eyebrow">Now playing</span>
+            <strong id="nowPlaying">Nothing selected</strong>
+          </div>
+          <div class="player-links">
+            <a href="https://www.youtube.com/" id="openYouTube" target="_blank" rel="noopener noreferrer">Open on YouTube ↗</a>
+            <button type="button" id="stopMusicBtn">Stop player</button>
+          </div>
+        </div>
+      </div>
+
+      <form class="custom-stream" id="customStreamForm">
+        <label for="customStreamUrl">Or paste a YouTube link</label>
+        <div class="custom-stream-row">
+          <input id="customStreamUrl" type="url" placeholder="https://www.youtube.com/watch?v=..." autocomplete="off">
+          <button class="ghost-btn" type="submit">Load stream</button>
+        </div>
+        <p class="form-note">Live streams and long mixes work best. Some videos may be region-restricted or unavailable to embed.</p>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal-layer" id="guideOverlay" role="dialog" aria-modal="true" aria-labelledby="guideTitle" hidden>
+    <div class="modal-backdrop" data-close-modal="guide"></div>
+    <section class="guide-modal glass-panel">
+      <button class="modal-close" type="button" data-close-modal="guide" aria-label="Close field guide">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+      <div class="modal-heading">
+        <span class="eyebrow">Field guide · quiet instructions</span>
+        <h2 id="guideTitle">A small ritual for <em>deep attention.</em></h2>
+      </div>
+      <div class="guide-grid">
+        <article>
+          <span class="guide-num">01</span>
+          <h3>Set the world</h3>
+          <p>Choose Ocean Drift or SkyCraft Soar, then paint the light with one of four atmosphere studies. The camera keeps its own slow orbit — no input required.</p>
+        </article>
+        <article>
+          <span class="guide-num">02</span>
+          <h3>Grow the sound</h3>
+          <p>Awaken the sound garden, then balance surf, rain, chimes and a 432 Hz binaural tone. For music, open the long-form stream library.</p>
+        </article>
+        <article>
+          <span class="guide-num">03</span>
+          <h3>Begin a focus</h3>
+          <p>A 25-minute focus block is followed by a five-minute break. The completion chime is soft; leave auto-break on to keep the rhythm.</p>
+        </article>
+        <article>
+          <span class="guide-num">04</span>
+          <h3>Keep the record</h3>
+          <p>Focus time, completed sessions and your preferred atmosphere are saved in this browser. Save a JSON study log to carry them to another device.</p>
+        </article>
+      </div>
+      <div class="shortcut-table">
+        <div><kbd>H</kbd><span>Hide / show the interface</span></div>
+        <div><kbd>M</kbd><span>Mute / unmute ambience</span></div>
+        <div><kbd>Space</kbd><span>Start / pause the timer</span></div>
+        <div><kbd>1–4</kbd><span>Switch atmosphere presets</span></div>
+        <div><kbd>O</kbd><span>Switch ocean / sky scenery</span></div>
+        <div><kbd>Esc</kbd><span>Close a panel or restore UI</span></div>
+      </div>
+      <div class="credit-line">
+        <span>Built with <a href="https://opencode.ai" target="_blank" rel="noopener noreferrer">OpenCode</a> + DeepSeek V4.1 Flash</span>
+        <span>Three.js r128 · Web Audio API</span>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+
+  <div class="loader" id="loader">
+    <div class="loader-sky" aria-hidden="true"></div>
+    <div class="loader-content">
+      <span class="loader-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-opacity=".3"/>
+          <path d="M10 39c4.8-6 9.2-6 14 0 4.8 6 9.2 6 14 0 4.8-6 9.2-6 14 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M17 30c3.5-4.4 6.9-4.4 10.4 0 3.5 4.4 6.9 4.4 10.4 0 3.5-4.4 6.9-4.4 10.4 0" stroke="currentColor" stroke-opacity=".5" stroke-width="1.2" stroke-linecap="round"/>
+          <circle cx="43" cy="20" r="3.7" fill="currentColor" fill-opacity=".9"/>
+        </svg>
+      </span>
+      <span class="loader-eyebrow">An ambient study sanctuary</span>
+      <h2>Sky <em>&amp;</em> Sea</h2>
+      <p id="loaderStatus">Painting the first horizon…</p>
+      <div class="loader-line"><span id="loaderProgress"></span></div>
+      <span class="loader-hint">Headphones recommended · camera auto-pilot is active</span>
+    </div>
+  </div>
+
+  <div class="fatal-fallback" id="fatalFallback" hidden>
+    <div>
+      <span class="eyebrow">A quiet fallback</span>
+      <h2>Your browser could not start WebGL.</h2>
+      <p>Sky &amp; Sea needs WebGL for its 3D scenery. The focus timer, sound mixer and study log still work below.</p>
+      <button class="primary-btn" type="button" id="fallbackContinue">Continue without scenery</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

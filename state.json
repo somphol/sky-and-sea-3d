@@ -1,0 +1,94 @@
+{
+  "project": {
+    "name": "Sky & Sea 3D — Ambient Study & Focus Sanctuary",
+    "slug": "sky-and-sea-3d",
+    "version": "1.0.0",
+    "description": "A procedural 3D ambient study sanctuary with cinematic oceans and cloud islands, synthesized Web Audio soundscapes, long-form YouTube music, a Pomodoro ritual, and a portable local study log.",
+    "repository": "https://github.com/somphol/sky-and-sea-3d",
+    "liveDemo": "https://somphol.github.io/sky-and-sea-3d/",
+    "license": "MIT"
+  },
+  "session": {
+    "harness": "OpenCode",
+    "harnessVersion": "2.2.5",
+    "model": "DeepSeek V4.1 Flash",
+    "modelId": "opencode-go/deepseek-v4.1-flash",
+    "sessionId": "ses_e69fdc73dffeZoGaFIXXZkL8tO",
+    "sessionSlug": "hidden-rocket",
+    "startedAt": "2026-11-01T07:28:10.448Z",
+    "packagedAt": "2026-11-01T07:54:13.000Z",
+    "durationSeconds": 1563,
+    "durationHuman": "26m 3s"
+  },
+  "usage": {
+    "snapshotAt": "2026-11-01T07:54:10.000Z",
+    "tokensInput": 475009,
+    "tokensOutput": 104610,
+    "tokensReasoning": 65365,
+    "tokensTotal": 644984,
+    "tokensCacheRead": 16735488,
+    "tokensCacheWrite": 1142,
+    "tokensTotalIncludingCache": 17380472,
+    "costUsd": 0.0,
+    "note": "Snapshot taken from the OpenCode session record immediately before packaging. The final state commit, GitHub push and Pages verification happen after this snapshot, so live session totals are marginally higher."
+  },
+  "build": {
+    "files": {
+      "index.html": { "bytes": 28930, "lines": 515 },
+      "style.css": { "bytes": 60029, "lines": 2817 },
+      "script.js": { "bytes": 110216, "lines": 2909 },
+      "README.md": { "bytes": 11670, "lines": 264 },
+      "sourceTotalBytes": 210845,
+      "sourceTotalLines": 6505
+    },
+    "screenshots": {
+      "screenshot.png": 1120239,
+      "screenshot-sky.png": 1227914,
+      "screenshot-dawn.png": 1104704,
+      "screenshot-mobile.png": 1088575,
+      "screenshot-mobile-focus.png": 539690,
+      "screenshot-hidden.png": 1065514
+    },
+    "features": [
+      "Ocean Drift shader ocean with five wave fields, Fresnel reflection, sun glints, foam and bioluminescence",
+      "SkyCraft Soar volumetric-style cloud sea, five floating islands, forests, ruins, crystals and birds",
+      "Four interpolated atmosphere presets: Golden Sunset, Moonlit Bioluminescent Night, Misty Morning Dawn, Deep Dusk",
+      "Zero-input cinematic auto-pilot camera with temporary manual orbit control",
+      "Four-layer procedural Web Audio soundscape: ocean surf, soft rain, wind chimes and 432 Hz binaural focus tone",
+      "Persistent volume mixer, mute and synthesized completion chimes",
+      "25/5 Pomodoro timer with pause/resume, reset, skip, auto-break, cycle dots and wall-clock accuracy",
+      "Long-form YouTube music drawer with four curated streams and custom URL support",
+      "localStorage study log, JSON export and validated JSON import",
+      "Hide UI mode with keyboard, click and touch restore",
+      "Responsive glassmorphic desktop, tablet and mobile interface",
+      "16-check browser self-test surface and WebGL fallback"
+    ],
+    "runtimeDependencies": [
+      "Three.js r128 (cdnjs, MIT)",
+      "OrbitControls r128 examples (jsDelivr, MIT)",
+      "Google Fonts: Cormorant Garamond, Manrope, IBM Plex Mono (SIL OFL 1.1)"
+    ]
+  },
+  "verification": {
+    "selfTests": "16/16 passed",
+    "runtimeErrors": 0,
+    "browser": "Headless Google Chrome 156",
+    "checks": [
+      "Ocean and SkyCraft scene switching",
+      "All four atmosphere presets and interpolation",
+      "Auto-pilot camera active with finite coordinates",
+      "Timer start, pause, focus completion, auto-break and restored timer state",
+      "Sound graph construction, four channels, master volume, mute and persistence",
+      "Downloaded focus_sanctuary_log.json and validated synthetic File import",
+      "Keyboard shortcuts H, 2, O and Space",
+      "YouTube long-form embed loaded in the player",
+      "Mobile 390x844 layout, four dock buttons, bottom-sheet panels and touch restore chip",
+      "No uncaught exceptions or application console errors"
+    ]
+  },
+  "credits": {
+    "builtWith": "OpenCode 2.2.5 + DeepSeek V4.1 Flash (opencode-go/deepseek-v4.1-flash)",
+    "opencodeUrl": "https://opencode.ai",
+    "threejsUrl": "https://threejs.org"
+  }
+}
