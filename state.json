@@ -16,21 +16,21 @@
     "sessionId": "ses_e69fdc73dffeZoGaFIXXZkL8tO",
     "sessionSlug": "hidden-rocket",
     "startedAt": "2026-11-01T07:28:10.448Z",
-    "packagedAt": "2026-11-01T07:54:13.000Z",
-    "durationSeconds": 1563,
-    "durationHuman": "26m 3s"
+    "packagedAt": "2026-11-01T08:00:45.000Z",
+    "durationSeconds": 1955,
+    "durationHuman": "32m 35s"
   },
   "usage": {
-    "snapshotAt": "2026-11-01T07:54:10.000Z",
-    "tokensInput": 475009,
-    "tokensOutput": 104610,
-    "tokensReasoning": 65365,
-    "tokensTotal": 644984,
-    "tokensCacheRead": 16735488,
+    "snapshotAt": "2026-11-01T08:00:43.000Z",
+    "tokensInput": 486195,
+    "tokensOutput": 110962,
+    "tokensReasoning": 66976,
+    "tokensTotal": 664133,
+    "tokensCacheRead": 19606400,
     "tokensCacheWrite": 1142,
-    "tokensTotalIncludingCache": 17380472,
+    "tokensTotalIncludingCache": 20270533,
     "costUsd": 0.0,
-    "note": "Snapshot taken from the OpenCode session record immediately before packaging. The final state commit, GitHub push and Pages verification happen after this snapshot, so live session totals are marginally higher."
+    "note": "Final snapshot taken from the OpenCode session record after GitHub publication and live Pages verification, immediately before the final state commit. That final commit adds only a marginal number of tokens."
   },
   "build": {
     "files": {

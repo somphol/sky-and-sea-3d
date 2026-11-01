@@ -4,8 +4,8 @@
 | --- | --- |
 | Project | **Sky & Sea 3D — Ambient Study & Focus Sanctuary** (`sky-and-sea-3d`) |
 | Started | 2026-11-01 07:28:10 UTC |
-| Packaged | 2026-11-01 07:54:13 UTC |
-| Duration | **26m 03s** (1,563 seconds) |
+| Packaged | 2026-11-01 08:00:45 UTC |
+| Duration | **32m 35s** (1,955 seconds) |
 | Harness | OpenCode 2.2.5 |
 | Model | DeepSeek V4.1 Flash (`opencode-go/deepseek-v4.1-flash`) |
 | Session | `ses_e69fdc73dffeZoGaFIXXZkL8tO` |
@@ -16,15 +16,15 @@
 
 | Metric | Tokens |
 | --- | ---: |
-| Input | 475,009 |
-| Output | 104,610 |
-| Reasoning | 65,365 |
-| **Total (input + output + reasoning)** | **644,984** |
-| Cache read | 16,735,488 |
+| Input | 486,195 |
+| Output | 110,962 |
+| Reasoning | 66,976 |
+| **Total (input + output + reasoning)** | **664,133** |
+| Cache read | 19,606,400 |
 | Cache write | 1,142 |
-| Total including cache | 17,380,472 |
+| Total including cache | 20,270,533 |
 
-> Snapshot taken from the OpenCode session record at 2026-11-01 07:54:10 UTC, immediately before packaging. The final state commit, GitHub push and Pages verification happen after this snapshot, so the live session totals are marginally higher. Total cost reported by the session: **$0.00**.
+> Final snapshot taken from the OpenCode session record at 2026-11-01 08:00:43 UTC, after GitHub publication and live Pages verification, immediately before the final state commit. That final commit adds only a marginal number of tokens. Total cost reported by the session: **$0.00**.
 
 ## What was built
 
@@ -85,6 +85,7 @@ A complete, no-build interactive 3D ambient study sanctuary across three modular
 - Verified mobile layout at 390 × 844 with no horizontal overflow, four dock buttons, bottom-sheet panels and the touch restore chip.
 - Verified the YouTube iframe loads the long-form Lofi Girl mix.
 - Captured six clean screenshots: desktop Golden Sunset, moonlit SkyCraft, Misty Dawn, mobile SkyCraft, mobile focus panel and hide-UI mode.
+- Published to GitHub, enabled Pages, and re-ran the live site at <https://somphol.github.io/sky-and-sea-3d/?selftest=1>: **16/16** tests pass with **0** runtime errors.
 
 ## Files
 
